@@ -1,47 +1,52 @@
-// ===============================================================================
 // LOAD DATA
-// We are linking our routes to a series of "data" sources.
-// These data sources hold arrays of information on friendsData.
-
-
 var friendsData = require("../data/friends.js");
 
 // ROUTING
 module.exports = function(app) {
-  // API GET Requests
-  // Below code handles when users "visit" a page.
-  // In each of the below cases when a user visits a link
-  // (ex: localhost:PORT/api/admin... they are shown a JSON of the data in the table)
-  // ---------------------------------------------------------------------------
-
-  app.get("/api/friends", function(req, res) {
+  // input a GET route that displays JSON of all friends
+app.get("/api/friends", function(req, res) {
     res.json(friendsData);
   });
 
+  
   // API POST Requests
   // Below code handles when a user submits a form and thus submits data to the server.
-  // In each of the below cases, when a user submits form data (a JSON object)
   // ...the JSON is pushed to the appropriate JavaScript array
-  // (ex. User fills out a reservation request... this data is then sent to the server...
-  // Then the server saves the data to the tableData array)
-  // ---------------------------------------------------------------------------
+    app.post("/api/friends", function(req, res) {
+    // grab new user's score to compare with friend in friendData array
+    var newUserScores = req.body.scores;
+    var scoresArray = [];
+    var friendCount = 0;
+    var mostMatched = 0;
 
-  app.post("/api/friends", function(req, res) {
-    // Note the code here. Our "server" will respond to requests and let users know if they have a table or not.
-    // It will do this by sending out the value "true" have a table
-    // req.body is available since we're using the body-parser middleware
-    
+    //runs through all current friends
+    for(var i=0; i<friendsData.length; i++){
+      var scoresDiff = 0;
 
-  // ---------------------------------------------------------------------------
-  // I added this below code so you could clear out the table while working with the functionality.
-  // Don"t worry about it!
+      //run through scores to compare friends
+      for(var p=0; p<newUserScores.length; p++){
+        scoresDiff += (Math.abs(parseInt(friendsData[i].scores[p]) - parseInt(newUserScores[p])));
+      }
 
-  app.post("/api/clear", function() {
-    // Empty out the arrays of data
-    friendsData = [];
-    
+      //push results into scoresArray
+      scoresArray.push(scoresDiff);
+    }
 
-    console.log(friendsData);
+    //after all friends are compared, find mostmatched
+    for(var i=0; i<scoresArray.length; i++){
+      if(scoresArray[i] <= scoresArray[mostMatched]){
+        mostMatched = i;
+      }
+    }
+    //return mostMatched data
+    var connection = friendsData[mostMatched];
+    res.json(connection);
+  
+    //pushes new submission into the friendsData array
+    friendsData.push(req.body);
   });
-  }) 
-}
+};
+
+
+  
+  
