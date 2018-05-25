@@ -123,5 +123,100 @@
                                 <option value="4">4</option>
                                 <option value="5">5 (Strongly Agree)</option>
                             </select>
+                            <br>
+                            <!-- Modal Trigger/Submit Button -->
+                            <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal" id="submitBtn">Submit</button>
+                        </div>
+                    </div>
+                    <div class='col s4'>
+                        <p><a href='/api/friends'>API Friends List</a> | <a href="https://github.com/mdotjr/FriendFinder.git" target='_blank'>GitHub Repo</a></p>
+                    </div>
+                    <!-- Materialize Modal Structure -->
+        <div id="modal1" class="modal">
+                <div class="modal-content">
+                  <h4>Your Friend is Found</h4>
+                  <h5 id="matchName"></h5>
+                  <img id="matchPic" src="" alt="No Image" width = 250px>
+                </div>
+              <div class="modal-footer">
+                <a href="#!" class="btn btn-info btn-lg">Done</a>
+              </div>
+            </div>
+      
+          </div>
+
+          <!-- grabbing the information to send into the server -->
+         <script type="text/javascript">
+          $(document).ready(function() {
+        $("#submitBtn").on("click", function() {
+            //form validation
+            function validateForm() {
+                var isValid = true;
+                $('.validate').each(function() {
+                    if ($(this).val() === ''){
+                        isValid = false;
+                    }
+                });
+                $('.browser-default').each(function() {
+                    if ($(this).val() === ""){
+                        isValid = false;
+                    }
+                });
+                return isValid;
+            }
+            //if everything is filled in
+            if (validateForm() == true) {
+                //creates a new friend from the values submitted
+                var newFriend = {
+                    name: $('#name').val().trim(),
+                    profilePic: $('#photo').val().trim(),
+                    scores: [
+                        $('#quest1').val(),
+                        $('#quest2').val(),
+                        $('#quest3').val(),
+                        $('#quest4').val(),
+                        $('#quest5').val(),
+                        $('#quest6').val(),
+                        $('#quest7').val(),
+                        $('#quest8').val(),
+                        $('#quest9').val(),
+                        $('#quest10').val(),
+                    ]
+                };
+          
+    var currentURL = window.location.origin; 
+    
+    //AJAX posts the data to friends API.
+    $.post(currentURL + "/api/friends", newFriend, function(data) {
+                //Grab the result from the AJAX post so that the most match's name and photo are displayed.
+                $("#matchName").text(data.name);
+                $("#matchPic").attr("src", data.profilePic);
+            });
+            // Show the modal with the most match
+                $('.modal').modal();
+            //clear form after submission
+            $('#name').val("");
+            $('#photo').val("");
+            $('#quest1').val("");
+            $('#quest2').val("");
+            $('#quest3').val("");
+            $('#quest4').val("");
+            $('#quest5').val("");
+            $('#quest6').val("");
+            $('#quest7').val("");
+            $('#quest8').val("");
+            $('#quest9').val("");
+            $('#quest10').val("");
+        } else {
+            alert("ALL fields must be completed before submitting!")
+        }
+        
+    });
+});
+</script>
+</body>
+
+</html>
+            
                             
                             
