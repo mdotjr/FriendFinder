@@ -4,7 +4,7 @@ var friendsData = require("../data/friends.js");
 // ROUTING
 module.exports = function(app) {
   // input a GET route that displays JSON of all friends
-app.get("/api/friends", function(req, res) {
+app.get('/api/friends', function(req, res) {
     res.json(friendsData);
   });
 
@@ -12,7 +12,7 @@ app.get("/api/friends", function(req, res) {
   // API POST Requests
   // Below code handles when a user submits a form and thus submits data to the server.
   // ...the JSON is pushed to the appropriate JavaScript array
-    app.post("/api/friends", function(req, res) {
+    app.post('/api/friends', function(req, res) {
     // grab new user's score to compare with friend in friendData array
     var newUserScores = req.body.scores;
     var scoresArray = [];
